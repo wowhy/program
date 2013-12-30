@@ -1,0 +1,44 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="bBackground" Color="Aqua" />
+    <SolidColorBrush x:Key="bBorder" Color="Aquamarine" />
+    <SolidColorBrush x:Key="bFont" Color="Black" />
+    <SolidColorBrush x:Key="bRowBackground1" Color="White" />
+    <SolidColorBrush x:Key="bRowBackground2" Color="Black" />
+    
+    <!--网格线颜色-->
+    <Style TargetType="DataGrid">
+        <Setter Property="Background" Value="{StaticResource bBackground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource bBorder}" />
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource bBorder}" />
+        <Setter Property="VerticalGridLinesBrush" Value="{StaticResource bBorder}" />
+    </Style>
+
+    <!--标题栏样式-->
+    <Style TargetType="DataGridColumnHeader">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="MinHeight" Value="28" />
+        <Setter Property="Height" Value="25"/>
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="{StaticResource bFont}" />        
+        <Setter Property="Background" Value="{StaticResource bBackground}" />        
+        <Setter Property="BorderBrush" Value="{StaticResource bBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <!--行样式触发-->
+    <Style  TargetType="DataGridRow">
+        <Setter Property="Background" Value="{StaticResource bRowBackground1}" />
+        <Setter Property="Height" Value="25"/>
+        <Setter Property="Foreground" Value="{StaticResource bFont}" />
+        <Style.Triggers>            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="LightGray"/>
+            </Trigger>
+
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Foreground" Value="Black"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>
