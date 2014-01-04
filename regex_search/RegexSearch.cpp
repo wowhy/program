@@ -27,12 +27,25 @@ static unordered_map<string, Command> commands =
 
 static unordered_map<Command, string> GetOptions(vector<string> args)
 {
-	unordered_map<Command, string> options = 
-	{
+	unordered_map<Command, string> options
+		/*=
+		{
 		{ DIR, "D:\\开发相关\\源代码\\MUI\\1.0\\FirstFloor.ModernUI" },
 		{ EXT, "*.cs" },
-		{ REGEX, "System" }
-	};
+		{ REGEX, "Hello" }
+		}*/;
+
+	for (auto i = begin(args); i != end(args); ++i)
+	{
+		auto find = commands.find(*i);
+		if (find != commands.end())
+		{
+			++i;
+			if (i == end(args)) throw CommandException;
+			options[find->second] = *i;
+		}
+	}
+
 	return options;
 }
 
@@ -91,17 +104,22 @@ static vector<string> GetAllFiles(string dir, string ext)
 
 static bool Search(string filepath, regex search)
 {
-	ifstream file(filepath);
-	if (file.fail())
-	{
+	HANDLE file = CreateFile(filepath.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
+	if (file == INVALID_HANDLE_VALUE)
 		return false;
-	}
 
 	stringstream ss;
-	ss << file.rdbuf();
-	file.close();
+	char buffer[1025] = {};
+	DWORD len;
+	while (ReadFile(file, buffer, 1024, &len, nullptr) && len != 0)
+	{
+		buffer[len] = '\0';
+		ss << buffer;
+	}
 
-	if (regex_match(ss.str(), search, regex_constants::match_any))
+	CloseHandle(file);
+
+	if (regex_search(ss.str(), search))
 		return true;
 
 	return false;
@@ -117,6 +135,15 @@ RegexSearch::~RegexSearch()
 
 void RegexSearch::Check() const
 {
+	if (options.find(DIR) == options.end())
+		throw CommandException;
+
+	if (options.find(EXT) == options.end())
+		throw CommandException;
+
+	if (options.find(REGEX) == options.end() ||
+		options.find(REGEX_IN_FILE) == options.end())
+		throw CommandException;
 }
 
 int RegexSearch::GetIgnoreSize() const

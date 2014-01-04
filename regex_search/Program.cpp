@@ -5,13 +5,20 @@ using namespace std;
 
 void Help()
 {
+	cout << "usage: " << endl;
 }
 
 int main(int argc, char* argv [])
 {
 	try
 	{
-		search::RegexSearch app({ argv[0], argv[0] });
+		vector<string> args;
+		for (int i = 1; i < argc; ++i)
+		{
+			args.push_back(argv[i]);
+		}
+
+		search::RegexSearch app(args);
 		app.Start();
 	}
 	catch (int ex)
