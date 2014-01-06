@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <string>
 
+#include "MyStack.h"
+
 using namespace std;
 
 void tolowerstr(string& input)
@@ -14,17 +16,27 @@ void tolowerwstr(wstring& input)
 	transform(input.begin(), input.end(), input.begin(), towlower);
 }
 
-template<typename T, void (func)(T&)>
-class baselower
+void toupperstr(string& input)
+{
+	transform(input.begin(), input.end(), input.begin(), toupper);
+}
+
+void toupperwstr(wstring& input)
+{
+	transform(input.begin(), input.end(), input.begin(), towupper);
+}
+
+template<class T, void (_transform)(T&)>
+class base_str
 {
 public:
-	baselower(T input) :str(input)
+	base_str(T input) :str(input)
 	{
-		func(this->str);
+		_transform(this->str);
 	}
 
 public:
-	baselower& operator=(const T& input)
+	base_str& operator=(const T& input)
 	{
 		str = input;
 		func(str);
@@ -42,15 +54,41 @@ private:
 	T str;
 };
 
-typedef baselower<string, tolowerstr> lowerstr;
-typedef baselower<wstring, tolowerwstr> lowerwstr;
+typedef base_str<string, tolowerstr> lowerstr;
+typedef base_str<wstring, tolowerwstr> lowerwstr;
+typedef base_str<string, toupperstr> upperstr;
+typedef base_str<wstring, toupperwstr> upperwstr;
 
 int main(int argc, char* argv [])
 {
-	lowerstr str("UPDATE");
-	cout << (string) str << endl;
+	lowerstr l_str("UPDATE");
+	cout << (string) l_str << endl;
 
-	lowerwstr wstr(L"INSERT");
-	wcout << (wstring) wstr << endl;
+	lowerwstr l_wstr(L"INSERT");
+	wcout << (wstring) l_wstr << endl;
+
+
+	upperstr u_str("update");
+	cout << (string) u_str << endl;
+
+	upperwstr u_wstr(L"insert");
+	wcout << (wstring) u_wstr << endl;
+
+
+	MyStack<int*> stack([](int* e){ delete e; });
+
+	stack.Push(new int(10));
+	stack.Push(new int(20));
+
+	auto action = [](int* e) -> int 
+	{
+		int t = *e;
+		delete e;
+		return t;
+	};
+
+	cout << action(stack.Pop()) << endl;
+	cout << action(stack.Pop()) << endl;
+
 	return 0;
 }
