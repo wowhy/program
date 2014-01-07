@@ -3,6 +3,7 @@
 #include <string>
 
 #include "MyStack.h"
+#include "tinyxml2.h"
 
 using namespace std;
 
@@ -59,7 +60,7 @@ typedef base_str<wstring, tolowerwstr> lowerwstr;
 typedef base_str<string, toupperstr> upperstr;
 typedef base_str<wstring, toupperwstr> upperwstr;
 
-int main(int argc, char* argv [])
+void test1()
 {
 	lowerstr l_str("UPDATE");
 	cout << (string) l_str << endl;
@@ -73,22 +74,52 @@ int main(int argc, char* argv [])
 
 	upperwstr u_wstr(L"insert");
 	wcout << (wstring) u_wstr << endl;
+}
 
-
+void test2()
+{
 	MyStack<int*> stack([](int* e){ delete e; });
 
 	stack.Push(new int(10));
 	stack.Push(new int(20));
 
-	auto action = [](int* e) -> int 
+	auto clear = [](int* e) -> int
 	{
 		int t = *e;
 		delete e;
 		return t;
 	};
 
-	cout << action(stack.Pop()) << endl;
-	cout << action(stack.Pop()) << endl;
+	cout << clear(stack.Pop()) << endl;
+	cout << clear(stack.Pop()) << endl;
+}
+
+void test3()
+{
+	using namespace tinyxml2;
+
+	static const char xml [] =
+		"<?xml version=\"1.0\"?>"
+		"<root>"
+		"<class name=\"TestA\"></class>"
+		"<class name=\"TestB\"></class>"
+		"</root>";
+
+	XMLDocument doc;
+	doc.Parse(xml);
+
+	auto root = doc.FirstChildElement("root");
+	auto _class = root->FirstChildElement("class");
+	while (_class != nullptr)
+	{
+		cout << _class->Attribute("name") << endl;
+		_class = _class->NextSiblingElement();
+	}
+}
+
+int main(int argc, char* argv [])
+{
+	test3();
 
 	return 0;
 }
