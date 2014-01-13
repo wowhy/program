@@ -1,0 +1,16 @@
+﻿<Window x:Class="WpfApplication1.AppView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="AppView" Height="600" Width="800"
+        x:Name="window">
+    <Grid DataContext="{Binding ViewModel, ElementName=window}">
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            <TextBox x:Name="txtInput" FontSize="18"></TextBox>
+            <TextBlock Text="{Binding DataFromTheInternet}" FontSize="18"></TextBlock>
+            <Button Content="Click me!" Command="{Binding GetDataFromTheInternet}"
+                    CommandParameter="{Binding Text, ElementName=txtInput}"
+                    MinWidth="75" Margin="0,6,0,0" />
+        </StackPanel>
+    </Grid>
+</Window>
