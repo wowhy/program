@@ -45,6 +45,16 @@ namespace WpfApplication1
                         this.lstMain.Items.Clear();
                     });
                 });
+
+            this.btn4.ClickAsObservable()
+                     .Do(k => ((Button)k.Sender).IsEnabled = false)
+                     .Delay(new TimeSpan(0, 0, 3))
+                     .SubscribeDispatcher(this, k =>
+                     {
+                         var btn = (Button)k.Sender;
+                         btn.IsEnabled = true;
+                         this.lstMain.Items.Clear();
+                     });
         }
 
         private void btn1_Click(object sender, RoutedEventArgs e)
