@@ -1,0 +1,27 @@
+﻿<Window x:Class="WpfApplication1.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Name="window"
+        Title="{Binding Title, Mode=TwoWay}" Height="600" Width="800"
+        DataContext="{Binding ViewModel, ElementName=window}">
+    <StackPanel>        
+        <ListBox ItemsSource="{Binding DataList}"
+                 IsHitTestVisible="False">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <ProgressBar Width="{Binding DataContext.ProgressBarWidth, ElementName=window}" Height="15" Value="{Binding Value}">
+                    </ProgressBar>
+                </DataTemplate>
+            </ListBox.ItemTemplate>            
+        </ListBox>
+        <Button Name="btn" Height="30" 
+                IsEnabled="{Binding CanExecute,Mode=TwoWay}"
+                Command="{Binding SortCommand}">
+            Sort
+        </Button>
+        <Button Height="30" IsEnabled="{Binding CanExecute, Mode=TwoWay}"
+                Command="{Binding RandomCommand}">
+            Random
+        </Button>
+    </StackPanel>
+</Window>
