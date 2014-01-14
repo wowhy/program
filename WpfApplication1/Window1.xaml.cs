@@ -80,7 +80,9 @@ namespace WpfApplication1
                 get { return dataList; }
             }
 
-            public ReactiveAsyncCommand SortCommand { get; private set; }
+            public ReactiveAsyncCommand QuickSortCommand { get; private set; }
+
+            public ReactiveAsyncCommand BubbleSortCommand { get; private set; }
 
             public ReactiveAsyncCommand RandomCommand { get; private set; }
 
@@ -88,8 +90,11 @@ namespace WpfApplication1
             {
                 this.dataList = new ReactiveList<ListObject>();
 
-                SortCommand = new ReactiveAsyncCommand();
-                SortCommand.RegisterAsyncAction(obj=> Command(obj, this.BubbleSortDataList));
+                QuickSortCommand = new ReactiveAsyncCommand();
+                QuickSortCommand.RegisterAsyncAction(obj => Command(obj, this.QuickSortDataList));
+
+                BubbleSortCommand = new ReactiveAsyncCommand();
+                BubbleSortCommand.RegisterAsyncAction(obj => Command(obj, this.BubbleSortDataList));
 
                 RandomCommand = new ReactiveAsyncCommand();
                 RandomCommand.RegisterAsyncAction(obj => Command(obj, this.RandomDataList));
@@ -120,14 +125,21 @@ namespace WpfApplication1
                     {
                         if (comparer(dataList[j].Value, dataList[j + 1].Value))
                         {
-                            var tmp = dataList[j + 1].Value;
-                            dataList[j + 1].Value = dataList[j].Value;
-                            dataList[j].Value = tmp;
-
-                            Thread.Sleep(41);
+                            Swap(j, j + 1);
                         }
                     }
                 }
+            }
+
+            private void QuickSortDataList()
+            {
+                var comparer = !asc ?
+                    new Func<int, int, bool>((x, y) => { return x < y; }) :
+                    new Func<int, int, bool>((x, y) => { return x > y; });
+
+                asc = !asc;
+
+                QuickSort(0, dataList.Count - 1, comparer);
             }
 
             private void RandomDataList()
@@ -141,6 +153,43 @@ namespace WpfApplication1
                 for (var i = 0; i < count; ++i)
                 {
                     action(rand.Next(0, 100) + 1, i);
+                }
+            }
+
+            private void QuickSort(int left, int right, Func<int, int, bool> comparer)
+            {
+                if (left >= right)
+                    return;
+
+                int index = Partition(left, right, comparer);
+                QuickSort(left, index - 1, comparer);
+                QuickSort(index + 1, right, comparer);
+            }
+
+            private int Partition(int left, int right, Func<int, int, bool> comparer)
+            {
+                var index = left;
+                var pivot = dataList[index].Value;
+                Swap(index, right);
+                for (var i = left; i < right; ++i)
+                {
+                    if (comparer(dataList[i].Value, pivot))
+                        Swap(index++, i);
+                }
+
+                Swap(right, index);
+                return index;
+            }
+
+            void Swap(int i, int j)
+            {
+                if (i != j)
+                {
+                    var tmp = dataList[i].Value;
+                    dataList[i].Value = dataList[j].Value;
+                    dataList[j].Value = tmp;
+
+                    Thread.Sleep(41);
                 }
             }
         }

@@ -14,10 +14,15 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>            
         </ListBox>
-        <Button Name="btn" Height="30" 
+        <Button Height="30" 
                 IsEnabled="{Binding CanExecute,Mode=TwoWay}"
-                Command="{Binding SortCommand}">
-            Sort
+                Command="{Binding QuickSortCommand}">
+            QuickSort
+        </Button>
+        <Button Height="30" 
+                IsEnabled="{Binding CanExecute,Mode=TwoWay}"
+                Command="{Binding BubbleSortCommand}">
+            BubbleSort
         </Button>
         <Button Height="30" IsEnabled="{Binding CanExecute, Mode=TwoWay}"
                 Command="{Binding RandomCommand}">
